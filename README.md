@@ -12,6 +12,40 @@ BirdNETの解析結果を視覚的に確認・管理するためのStreamlitダ�
 - **テーブル表示**: ID付きでトレースしやすいデータ表示
 - **エクスポート機能**: 検索結果をCSVで出力
 
+## 重要な特徴
+
+### データベースの柔軟な配置
+
+**このアプリケーションはデータベースをリポジトリ内に置く必要がありません。**
+
+- BirdNETで生成した既存のデータベース（任意の場所）をそのまま使用可能
+- データベースパスは設定ファイルまたは環境変数で指定
+- 複数のプロジェクトや場所のデータベースを簡単に切り替え可能
+- データベースファイルをコピーしたり移動したりする必要なし
+
+**配置例:**
+```
+# あなたのBirdNETプロジェクト
+/your/birdnet/project/
+├── result.db              ← 既存のデータベース
+├── audio/                 ← 既存の音声ファイル
+└── analysis_results/
+
+# このダッシュボードアプリ
+/separate/location/BioAcoustic-Dashboard/
+├── app.py
+├── config.json           ← データベースパスを指定
+└── streamlit_viewer/
+```
+
+設定ファイル（config.json）でパスを指定するだけで接続完了：
+```json
+{
+  "database_path": "/your/birdnet/project",
+  "audio_path": "/your/birdnet/project/audio"
+}
+```
+
 ## クイックスタート
 
 ### 1. 環境構築
@@ -204,6 +238,41 @@ BirdNETの解析結果を格納するメインテーブル：
 6. **データエクスポート**
    - CSVダウンロードボタンで検索結果をエクスポート
    - ファイル名に日時が自動付与
+
+### 複数データベースの切り替え
+
+異なるBirdNETプロジェクトを切り替える場合：
+
+1. **設定ファイルを編集**
+   ```bash
+   # config.jsonのdatabase_pathを変更
+   {
+     "database_path": "/path/to/another/project",
+     "audio_path": "/path/to/another/project/audio"
+   }
+   ```
+
+2. **環境変数で一時切り替え**
+   ```bash
+   # Windows
+   set BIRDNET_DATABASE_PATH=D:\Other_Project\database
+   python app.py
+   
+   # macOS/Linux  
+   export BIRDNET_DATABASE_PATH=/path/to/other/project
+   python app.py
+   ```
+
+3. **複数設定ファイル管理**
+   ```bash
+   # プロジェクト別設定ファイル
+   config_forest_study.json
+   config_urban_birds.json
+   config_migration_2024.json
+   
+   # 使用時にコピーまたはシンボリックリンク
+   cp config_forest_study.json config.json
+   ```
 
 ### 詳細機能
 

@@ -103,12 +103,12 @@ BirdNET Streamlit Viewer 初期設定
 データベースフォルダの設定
    BirdNETのデータベースファイル（result.db等）があるフォルダを指定してください
 
-データベースフォルダの絶対パスを入力: C:\BirdNET\database
-パスを検証中: C:\BirdNET\database
+データベースフォルダの絶対パスを入力: C:\path\to\your\database
+パスを検証中: C:\path\to\your\database
 データベースファイルを発見: result.db
 
 音声フォルダの設定
-   デフォルト: C:\BirdNET\database\audio
+   デフォルト: C:\path\to\your\database\audio
 音声フォルダのパス (Enter でデフォルト): 
 
 アプリケーション設定
@@ -139,16 +139,16 @@ BirdNET Streamlit Viewer 初期設定
 **Windows:**
 ```json
 {
-  "database_path": "C:\\\\BirdNET\\\\database",
-  "audio_path": "C:\\\\BirdNET\\\\database\\\\audio"
+  "database_path": "C:\\\\path\\\\to\\\\your\\\\database",
+  "audio_path": "C:\\\\path\\\\to\\\\your\\\\database\\\\audio"
 }
 ```
 
 **macOS/Linux:**
 ```json
 {
-  "database_path": "/Users/username/BirdNET/database",
-  "audio_path": "/Users/username/BirdNET/database/audio"
+  "database_path": "/path/to/your/database",
+  "audio_path": "/path/to/your/database/audio"
 }
 ```
 
@@ -158,21 +158,50 @@ BirdNET Streamlit Viewer 初期設定
 
 **Windows:**
 ```cmd
-set BIRDNET_DATABASE_PATH=C:\BirdNET\database
-set BIRDNET_AUDIO_PATH=C:\BirdNET\database\audio
+set BIRDNET_DATABASE_PATH=C:\path\to\your\database
+set BIRDNET_AUDIO_PATH=C:\path\to\your\database\audio
 ```
 
 **macOS/Linux:**
 ```bash
-export BIRDNET_DATABASE_PATH="/Users/username/BirdNET/database"
-export BIRDNET_AUDIO_PATH="/Users/username/BirdNET/database/audio"
+export BIRDNET_DATABASE_PATH="/path/to/your/database"
+export BIRDNET_AUDIO_PATH="/path/to/your/database/audio"
 ```
 
 ## データベース準備
 
+### 重要：データベースの外部配置について
+
+**このアプリケーションの重要な特徴として、データベースファイルをアプリケーション内にコピーする必要がありません。**
+
+既存のBirdNETプロジェクトのデータベースを、元の場所にそのまま残して使用できます：
+
+#### 利点
+- **既存プロジェクトを保持**: BirdNETで作成したプロジェクト構造をそのまま維持
+- **複数プロジェクト対応**: 設定変更だけで異なるプロジェクトのデータベースを切り替え
+- **ストレージ効率**: 大容量のデータベースをコピーする必要なし
+- **データ整合性**: 元のデータが変更されることなく安全に参照
+
+#### 実際の使用例
+```
+# 既存のBirdNETプロジェクト（元の場所にそのまま）
+D:/Research/BirdNet_Projects/Forest_Study_2024/
+├── result.db                    ← このDBを直接参照
+├── audio/
+│   ├── original_recordings/
+│   └── processed/
+└── outputs/
+
+# このダッシュボードアプリ（別の場所に配置）
+C:/Tools/BioAcoustic-Dashboard/
+├── config.json                 ← 上記パスを設定
+├── app.py
+└── streamlit_viewer/
+```
+
 ### BirdNETの解析結果がある場合
 
-既存の `result.db` または類似名のSQLiteファイルを使用できます：
+既存の `result.db` または類似名のSQLiteファイルを **元の場所で** 使用できます：
 
 1. **サポートするファイル名:**
    - `result.db`

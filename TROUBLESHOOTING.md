@@ -62,12 +62,12 @@
 3. **パス形式の確認**
    ```json
    // 間違い（Windows）
-   "database_path": "C:\BirdNET\database"
+   "database_path": "C:\path\to\database"
    
    // 正しい（Windows） 
-   "database_path": "C:\\BirdNET\\database"
+   "database_path": "C:\\path\\to\\database"
    // または
-   "database_path": "C:/BirdNET/database"
+   "database_path": "C:/path/to/database"
    ```
 
 ### データベースファイルが見つかりません
