@@ -627,8 +627,8 @@ def show_data_view():
         # テーブル表示用のデータ準備
         display_df = df.copy()
         
-        # 削除するカラム（モデル、quality_statusを追加）
-        columns_to_drop = ['id', 'file_path', 'scientific_name', 'audio_segment_path', 'spectrogram_path', 'model_name', 'quality_status']
+        # 削除するカラム（idは残す、モデル、quality_statusを追加）
+        columns_to_drop = ['file_path', 'scientific_name', 'audio_segment_path', 'spectrogram_path', 'model_name', 'quality_status']
         display_df = display_df.drop(columns=[col for col in columns_to_drop if col in display_df.columns])
         
         # 処理状況カラムを追加（パスベース）
@@ -662,6 +662,7 @@ def show_data_view():
         
         # カラム名を日本語に変更
         display_df = display_df.rename(columns={
+            'id': 'ID',
             'session_name': 'セッション名',
             'common_name': '種名',
             'confidence': '信頼度',
@@ -670,8 +671,9 @@ def show_data_view():
             'filename': 'ファイル名'
         })
         
-        # カラムの順序を明示的に指定（ファイル名を最後に）
+        # カラムの順序を明示的に指定（IDを先頭に、ファイル名を最後に）
         desired_order = [
+            'ID',
             'セッション名',
             '種名', 
             '信頼度',
@@ -730,26 +732,24 @@ def show_data_view():
         # データテーブル表示
         st.subheader("📊 検索結果")
         
-        # 選択状態の復元を確認
-        initial_selection = None
-        if 'restore_selection' in st.session_state and st.session_state.restore_selection:
-            if 'selected_record' in st.session_state and st.session_state.selected_record:
-                # 更新されたデータから同じIDのレコードのインデックスを見つける
-                selected_id = st.session_state.selected_record.get('id')
-                if selected_id:
-                    matching_indices = df.index[df['id'] == selected_id].tolist()
-                    if matching_indices:
-                        initial_selection = {"rows": [matching_indices[0]]}
-            # フラグをクリア
-            st.session_state.restore_selection = False
+        # 選択された行を視覚的にハイライト（選択IDがある場合）
+        if 'selected_record' in st.session_state and st.session_state.selected_record:
+            selected_id = st.session_state.selected_record.get('id')
+            if selected_id:
+                matching_indices = df.index[df['id'] == selected_id].tolist()
+                if matching_indices:
+                    selected_row_index = matching_indices[0]
+                    st.info(f"📍 選択中: {selected_row_index + 1}行目 - {st.session_state.selected_record.get('common_name', '不明')} (ID: {selected_id})")
         
+        # データテーブル表示
         event = st.dataframe(
             display_df, 
             use_container_width=True, 
             height=500,
             on_select="rerun",
             selection_mode="single-row",
-            key="data_table"
+            key="data_table",
+            hide_index=True
         )
         
         # 選択された行の情報を取得・保持
